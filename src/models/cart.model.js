@@ -10,13 +10,13 @@ const cartSchema = new mongoose.Schema({
         {
             product: {
                 type: Types.ObjectId,
-                ref: "Products",
+                ref: "Product",
                 required:true
             },
             quantify:
             {
                 type: Number,
-                default:1
+                default:0
             } 
         }
     ]

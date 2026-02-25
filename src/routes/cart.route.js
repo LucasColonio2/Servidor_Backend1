@@ -1,6 +1,6 @@
 import {Router} from "express"
 import {getAllcarts, 
-    AddtoCart,
+    addProductToCart,
     deleteProductFromcart,
 deletecart} from "../controllers/carts.controller.js"
 
@@ -10,7 +10,7 @@ const router = Router();
 router.get ("/", getAllcarts)
 
 //Agregar un producto al carrito
-router.post ("/:uid/:pid/:quantify",AddtoCart)
+router.post ("/:cid/products/:pid",addProductToCart)
 
 //Borrar producto de carrito del usuario
 router.delete("/:cid/products/:pid", deleteProductFromcart)
