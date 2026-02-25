@@ -6,25 +6,35 @@ import Product from "../models/product.model.js"
 export const createProduct = async (req,res)=> {
     const {name, price, stock, description, category} = req.body;
     //Validaracion------------------
-    if (!name|| !price || !stock || !description ||!category
+    if (!name|| !price || !stock || !description ||!category 
     ) {
         return res.status (400).json({message: "Todos los campos son requeridos"}
         )
     }
     //------------------------------------
-    
-    const newProduct = await Product.create ({ name, price,stock,description,category}) 
+    const available = stock>0 ? true : false
+   
+    const newProduct = await Product.create ({ name, price,stock,description,category,available}) 
     res.json(newProduct)
-
-
-
 }
 
 
 
-//Se im
+//Se obtiene todos los productos
 export const getAllProducts = async(req,res) => {
-    const products = await Product.find().populate("category")
+    const {category, order, available } = req.query
+    const filter = {}
+    const sortOrder = order === "true" ? 1 : -1
+   
+    if(available  !== undefined){
+        filter.stock  = {$gt:0}
+    }
+    
+    if (category){
+        filter.category = category
+    }
+
+    const products = await Product.find(filter).sort({price:sortOrder}).populate("category")
     res.json(products)
 }
 

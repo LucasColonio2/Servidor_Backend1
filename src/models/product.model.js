@@ -11,6 +11,10 @@ const productSchema = new mongoose.Schema ({
     description: String,
     price: Number,
     stock: Number,
+    available:{
+        type: Boolean,
+        default: false
+    },
     category: {
         type: Types.ObjectId,
         ref: "Category"

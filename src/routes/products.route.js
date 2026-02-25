@@ -27,7 +27,6 @@ router.get("/aggregate-paginate/:page", getProductsAggregatePaginate)
 
 
 // Ruta para crear un producto
-
 router.post ("/", createProduct)
 
 
