@@ -1,5 +1,5 @@
 import User from "../models/user.model.js"
-
+import Cart from "../models/cart.model.js"
 
 //Traer todos los usuarios
 export const getAllUsers = async (req,res)=> {
@@ -16,5 +16,8 @@ export const createUser = async (req,res)=> {
     }
 //-----------------------------------------
     const user = await User.create(req.body);
+    const {_id} = user
+    const newCart = await Cart.create({user: _id })
     res.json (user)
-}
+    
+} 

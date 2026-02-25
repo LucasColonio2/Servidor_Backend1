@@ -8,7 +8,7 @@ export const createProduct = async (req,res)=> {
     //Validaracion------------------
     if (!name|| !price || !stock || !description ||!category
     ) {
-        return res.status (400).json({message: "Todos los campos son requeridos"};
+        return res.status (400).json({message: "Todos los campos son requeridos"}
         )
     }
     //------------------------------------

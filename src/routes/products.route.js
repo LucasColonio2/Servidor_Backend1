@@ -1,7 +1,8 @@
 import { Router} from "express";
 import {getAllProducts, getProductsByPriceAndStock,
     getProductsPaginate,
-    etProductsAggregate,getProductsAggregatePaginate, 
+    getProductsAggregate,
+    getProductsAggregatePaginate, 
     createProduct} from "../controllers/products.controller.js"
 
 
@@ -13,7 +14,7 @@ router.get("/",getAllProducts);
 router.get("/find-by-price-stock",getProductsByPriceAndStock)
 //--------------------------------
 
-//Router con paginacion//
+//Router traer productos con paginacion//
 router.get('/paginate/:page/:limit/:sort', getProductsPaginate)
 //------------------------
 

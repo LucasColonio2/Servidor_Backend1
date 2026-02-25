@@ -1,7 +1,7 @@
 import {Router} from "express"
 import {getAllcarts, 
     createCart,
-    deleteProductFromcart
+    deleteProductFromcart,
 deletecart} from "../controllers/carts.controller.js"
 
 

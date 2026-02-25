@@ -5,7 +5,7 @@ import {getAllUsers, createUser} from "../controllers/users.controller.js"
 const router = Router ()
 
 //Traer todos los usuarios
-router.get("/", getAllusers);
+router.get("/", getAllUsers);
 
 //Crear un usurio
 router.post("/", createUser)

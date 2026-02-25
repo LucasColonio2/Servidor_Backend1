@@ -1,6 +1,6 @@
 import Cart from "../models/cart.model.js"
 import User from "../models/user.model.js"
-
+import Product from "../models/product.model.js"
 
 
 //Elimiar carrito completo
@@ -39,10 +39,11 @@ export const deleteProductFromcart = async (req,res)=> {
 
 
 export const getAllcarts = async (req, res)=>{
-const carts = await Cart.find();
+const carts = await Cart.find().populate("user", "firstName lastName");
 res.json(carts)
 }
 
+//Crear un carrito
 export const createCart = async (req, res) => {
     const {uid, pid, quantify} = req.params;
 

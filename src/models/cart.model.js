@@ -1,22 +1,26 @@
-import mongoose, {Types} from "mongoosee"
+import mongoose, {Types} from "mongoose"
 
 const cartSchema = new mongoose.Schema({
     user: {
-        type: Types.ObjetcId,
+        type: Types.ObjectId,
         ref: "User",
         required: true
     },
     products:[
         {
             product: {
-                type: Types.ObjetcId,
+                type: Types.ObjectId,
                 ref: "Products",
                 required:true
             },
-            quantify: Number
+            quantify:
+            {
+                type: Number,
+                default:1
+            } 
         }
     ]
 
 });
 
-const Cart = mongoose.model ("Cart", cartSchema)
+export default mongoose.model ("Cart", cartSchema)
