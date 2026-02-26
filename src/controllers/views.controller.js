@@ -1,4 +1,5 @@
 import Product from "../models/product.model.js"
+import Cart from "../models/cart.model.js";
 
 //Mostrar productos con paginacion
 export const viewProducts = async (req, res) => {
@@ -44,4 +45,24 @@ export const getProductDetail = async (req, res) => {
     const { pid } = req.params
     const product = await Product.findById(pid).populate("category").lean()
     res.render("productDetail", { product })
+}
+
+
+//Vista de carrito
+export const viewCart = async (req, res) => {
+    const { cid } = req.params;
+
+    const cart = await Cart.findById(cid)
+        .populate("products.product")
+        .lean();
+
+    if (!cart) {
+        return res.status(404).send("Carrito no encontrado");
+    }
+
+    res.render("cart", {
+        products: cart.products
+    });
+
+
 }
