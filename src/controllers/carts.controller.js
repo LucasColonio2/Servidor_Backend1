@@ -3,6 +3,62 @@ import User from "../models/user.model.js"
 import Product from "../models/product.model.js"
 import mongoose from "mongoose"
 
+
+//Actualizar TODOS los productos de un carrito
+export const updateCartProducts = async (req, res) => {
+    const { cid } = req.params
+    const { products } = req.body
+
+if (!cid || !products) {
+        return res.status(400).json({ message: "Todos los campos son requeridos" })
+    }
+
+
+    const result = await Cart.updateOne(
+        { _id: cid },
+        { $set: { products: products } }
+    )
+
+    const cart = await Cart.findById(cid)
+    res.status(200).json({
+        message: "Carrito actualizado",
+        cart
+    })
+}
+
+
+
+//Actualizar cantidad de un producto de un carrito
+export const updateProductQuantity = async (req, res) => {
+    const { cid, pid } = req.params
+    const { quantify } = req.body
+
+    //Validacion de si existe usuario, si hay stock del producto y si hay cantidad del producto que quiere el usuario
+    if (!cid || !pid || quantify === undefined) {
+        return res.status(400).json({ message: "Todos los campos son requeridos" })
+    }
+
+    const newQuantify = quantify
+
+    const result = await Cart.updateOne(
+        { _id: cid, "products.product": pid },
+        {
+            $set:
+            {
+                "products.$.quantify": newQuantify
+            }
+        }
+
+    )
+    const cart = await Cart.findById(cid)
+    res.status(200).json({
+        message: "Cantidad de producto actualizado",
+        cart
+    })
+
+}
+
+
 //Añadir producto a carrito
 export const addProductToCart = async (req, res) => {
     const { cid, pid } = req.params
@@ -15,13 +71,13 @@ export const addProductToCart = async (req, res) => {
     //-----------------------------------------
 
 
-    //Si existe  producto en carrito le agrega 1
+    //Si existe  producto en carrito se le agrega por lo que se pasa en params
     const updated = await Cart.updateOne(
         {
             _id: new mongoose.Types.ObjectId(cid),
             "products.product": pid
         },
-        { $inc: {"products.$.quantify": quantify } }
+        { $inc: { "products.$.quantify": quantify } }
     );
 
     // Si no existe el producto lo agregamos
@@ -32,7 +88,7 @@ export const addProductToCart = async (req, res) => {
                 $push: {
                     products: {
                         product: pid,
-                        quantity: quantify
+                        quantify: quantify
                     }
                 }
             }
@@ -48,7 +104,7 @@ export const addProductToCart = async (req, res) => {
 
 
 
-//Elimiar carrito completo
+//Elimiar productos del carrito
 export const deleteAllProducts = async (req, res) => {
     const { cid } = req.params
 
@@ -58,11 +114,11 @@ export const deleteAllProducts = async (req, res) => {
     }
     //-----------------------------------------------------------------
 
-   
+
     const result = await Cart.updateOne(
         { _id: cid },
-         { $set: { products: [] } }
-    
+        { $set: { products: [] } }
+
     )
     res.status(200).json({
         message: "Productos eliminados del carrito",
@@ -97,7 +153,7 @@ export const deleteProductFromcart = async (req, res) => {
         { _id: cid },
         { $pull: { products: { product: pid } } }
     )
-    res.json({ messege: "Producto eliminado del carrito",cart })
+    res.json({ messege: "Producto eliminado del carrito", cart })
 }
 
 
