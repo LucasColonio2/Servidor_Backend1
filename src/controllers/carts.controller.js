@@ -49,36 +49,33 @@ export const addProductToCart = async (req, res) => {
 
 
 //Elimiar carrito completo
-export const deletecart = async (req, res) => {
-    const { uid } = req.params
+export const deleteAllProducts = async (req, res) => {
+    const { cid } = req.params
 
-    //Validacion para ver si se esta mandando por endpoiun el ID del user
-    if (!uid) {
+    //Validacion para ver si se esta mandando por endpoiun el ID del carrito
+    if (!cid) {
         return res.status(400).json({ message: "User ID is required" })
     }
     //-----------------------------------------------------------------
 
-    //Validacion para ver si el user existe
-    const userExists = await User.findById(uid)
-    if (!userExists) {
-        return res.status(400).json({ message: "User does no exist" })
-    }
-    //---------------------------------------
-
-    const result = await Cart.deleteone({ user: uid })
-    res.json(result)
+   
+    const result = await Cart.updateOne(
+        { _id: cid },
+         { $set: { products: [] } }
+    
+    )
+    res.status(200).json({
+        message: "Productos eliminados del carrito",
+        result
+    })
 }
+
+
+
 
 //Controlador para eliminar producto del carrito del usuario
 export const deleteProductFromcart = async (req, res) => {
     const { cid, pid } = req.params
-console.log(cid)
-console.log(pid)
-    //Validacion para ver si se mandan el id del carrito y del producto 
-    if (!cid || !pid) {
-        return res.status(400).json({ message: "All fields are required" })
-    }
-    //---------------------------------------------
 
 
     //Verifica si existe el carrito del ID que se paso por parametro
@@ -88,11 +85,8 @@ console.log(pid)
     }
     //------------------------------------------
 
-
     //Validacion para saber si existen un producto en el carrito o devuelve error
     const productExist = cart.products.some(p => p.product.toString() === pid)
-
-    //Validacion para verificar si el producto se encuentra en el carrito
     if (!productExist) {
         return res.status(404).json({ message: "Producto no encontrado en el carrito" })
     }
@@ -100,10 +94,10 @@ console.log(pid)
 
 
     const result = await Cart.updateOne(
-        { user: cid },
-        { $pull: { product: { product: pid } } }
+        { _id: cid },
+        { $pull: { products: { product: pid } } }
     )
-    res.json(result, { messege: "Producto eliminado del carrito" })
+    res.json({ messege: "Producto eliminado del carrito",cart })
 }
 
 
